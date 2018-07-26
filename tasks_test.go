@@ -89,7 +89,15 @@ healthcheck:
   method: GET
   status: 200
   match: .*OK
-  allowed_failures: 0`
+  allowed_failures: 0
+cronjobs:
+  - name: salve
+    schedule: 10/3/3/3
+    concurrencyPolicy: salve
+    command: ls -la /
+    suspend: false
+    successfulJobsHistoryLimit: 3
+    failedJobsHistoryLimit: 3`
 	tsuruYmlPath := fmt.Sprintf("%s/%s", defaultWorkingDir, "tsuru.yml")
 	s.testFS().FileContent = tsuruYmlData
 	_, err := s.fs.Create(tsuruYmlPath)
@@ -108,6 +116,16 @@ healthcheck:
 			"status":           200,
 			"match":            ".*OK",
 			"allowed_failures": 0,
+		},
+		Cronjobs: []interface{}{map[interface{}]interface{}{
+			"successfulJobsHistoryLimit": 3,
+			"failedJobsHistoryLimit":     3,
+			"name":              "salve",
+			"schedule":          "10/3/3/3",
+			"concurrencyPolicy": "salve",
+			"command":           "ls -la /",
+			"suspend":           false,
+		},
 		},
 	}
 	t, err := loadTsuruYaml(s.fs)

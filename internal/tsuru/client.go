@@ -29,6 +29,7 @@ type TsuruYaml struct {
 	Hooks       Hook                   `json:"hooks,omitempty"`
 	Processes   map[string]string      `json:"processes,omitempty"`
 	Healthcheck map[string]interface{} `yaml:"healthcheck" json:"healthcheck,omitempty"`
+	Cronjobs    []interface{}          `yaml:"cronjobs" json:"cronjobs,omitempty"`
 }
 
 type Hook struct {
