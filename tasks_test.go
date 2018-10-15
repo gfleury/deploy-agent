@@ -6,6 +6,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"os"
 	"syscall"
@@ -92,7 +93,7 @@ healthcheck:
   allowed_failures: 0
 cronjobs:
   - name: salve
-    schedule: 10/3/3/3
+    schedule: "*/1 * * * *"
     concurrencyPolicy: salve
     command: ls -la /
     suspend: false
@@ -117,20 +118,22 @@ cronjobs:
 			"match":            ".*OK",
 			"allowed_failures": 0,
 		},
-		Cronjobs: []interface{}{map[interface{}]interface{}{
-			"successfulJobsHistoryLimit": 3,
-			"failedJobsHistoryLimit":     3,
-			"name":              "salve",
-			"schedule":          "10/3/3/3",
-			"concurrencyPolicy": "salve",
-			"command":           "ls -la /",
-			"suspend":           false,
+		Cronjobs: []tsuru.Cronjob{{
+			SuccessfulJobsHistoryLimit: 3,
+			FailedJobsHistoryLimit:     3,
+			Name:              "salve",
+			Schedule:          "*/1 * * * *",
+			ConcurrencyPolicy: "salve",
+			Command:           "ls -la /",
+			Suspend:           false,
 		},
 		},
 	}
 	t, err := loadTsuruYaml(s.fs)
 	c.Assert(err, check.IsNil)
 	c.Assert(t, check.DeepEquals, expected)
+	_, err = json.Marshal(t)
+	c.Assert(err, check.IsNil)
 }
 
 func (s *S) TestHooks(c *check.C) {

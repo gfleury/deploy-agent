@@ -29,12 +29,22 @@ type TsuruYaml struct {
 	Hooks       Hook                   `json:"hooks,omitempty"`
 	Processes   map[string]string      `json:"processes,omitempty"`
 	Healthcheck map[string]interface{} `yaml:"healthcheck" json:"healthcheck,omitempty"`
-	Cronjobs    []interface{}          `yaml:"cronjobs" json:"cronjobs,omitempty"`
+	Cronjobs    []Cronjob              `yaml:"cronjobs" json:"cronjobs,omitempty"`
 }
 
 type Hook struct {
 	BuildHooks []string               `yaml:"build,omitempty" json:"build"`
 	Restart    map[string]interface{} `yaml:"restart" json:"restart"`
+}
+
+type Cronjob struct {
+	SuccessfulJobsHistoryLimit int    `yaml:"successfulJobsHistoryLimit,omitempty" json:"successfulJobsHistoryLimit"`
+	FailedJobsHistoryLimit     int    `yaml:"failedJobsHistoryLimit,omitempty" json:"failedJobsHistoryLimit"`
+	Name                       string `yaml:"name,omitempty" json:"name"`
+	Schedule                   string `yaml:"schedule,omitempty" json:"schedule"`
+	ConcurrencyPolicy          string `yaml:"concurrencyPolicy,omitempty" json:"concurrencyPolicy"`
+	Command                    string `yaml:"command,omitempty" json:"command"`
+	Suspend                    bool   `yaml:"suspend,omitempty" json:"suspend"`
 }
 
 func (t *TsuruYaml) IsEmpty() bool {
